@@ -1,10 +1,57 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
       xmlns:p="http://primefaces.org/ui">
 <f:view>
-    <p:outputLabel value="#{testBean.text}"/>
+    <h:head>
+        <link rel="shortcut icon" type="image/x-icon" href="#{request.contextPath}/resources/images/favicon.ico"/>
+        <title>Mealy Machine Minimizer</title>
+    </h:head>
+
+    <h:body>
+        <h:form>
+            <p:wizard>
+                <p:tab id="define1" title="Define 1">
+                    <p:panel header="Define 1 Details">
+                        <p:messages/>
+                        <h:panelGrid columns="2" columnClasses="label, value">
+                            <h:outputText value="Input Alphabet:"/>
+                            <p:inputText value="#{wizardBean.inputAlphabet}" required="true"/>
+
+                            <h:outputText value="Output Alphabet:"/>
+                            <p:inputText value="#{wizardBean.outputAlphabet}" required="true"/>
+
+                            <h:outputText value="State Count:"/>
+                            <p:inputText value="#{wizardBean.stateCount}" required="true"/>
+                        </h:panelGrid>
+                    </p:panel>
+                </p:tab>
+
+                <p:tab id="define2" title="Define 2">
+                    <p:panel header="Define 2 Details">
+                        <p:dataTable var="stateDescriptor" value="#{wizardBean.stateDescriptors}">
+                            <p:columnGroup type="header">
+                                <p:row>
+                                    <p:column headerText="State" rowspan="2"/>
+                                    <p:column headerText="Transition Function" colspan="5"/>
+                                    <p:column headerText="Output Function" colspan="5"/>
+                                </p:row>
+                                <p:row>
+
+                                </p:row>
+                            </p:columnGroup>
+                        </p:dataTable>
+                    </p:panel>
+                </p:tab>
+
+                <p:tab id="result" title="Result">
+                    <p:panel header="Equivalential Minimized Mealy Machine">
+
+                    </p:panel>
+                </p:tab>
+            </p:wizard>
+        </h:form>
+    </h:body>
 </f:view>
 </html>

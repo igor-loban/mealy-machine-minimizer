@@ -5,7 +5,7 @@ import javax.faces.bean.SessionScoped;
 
 @ManagedBean
 @SessionScoped
-public class TestBean {
+public class WizardBean {
     public String getText() {
         return "Hello, world!";
     }
