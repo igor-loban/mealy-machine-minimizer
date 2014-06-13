@@ -1,7 +1,9 @@
 package by.bsu.fpmi.memami;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Record implements Serializable {
@@ -25,5 +27,13 @@ public class Record implements Serializable {
 
     public Output getOutput(String alpha) {
         return outputs.get(alpha);
+    }
+
+    public List<String> getOutputs() {
+        List<String> result = new ArrayList<>();
+        for (Map.Entry<String, Output> entry : outputs.entrySet()) {
+            result.add(entry.getValue().getValue());
+        }
+        return result;
     }
 }
