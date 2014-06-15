@@ -1,8 +1,10 @@
 package by.bsu.fpmi.memami;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -20,9 +22,9 @@ public final class MealyMachineMinimizer {
             modified = nextPhiRelation(phiRelation, context);
         } while (modified);
         // Построить конечное разбиение
-        Set<Set<Record>> finalSplitting = buildFinalSplitting(records, phiRelation);
+        Set<Set<Record>> finalSplitting = buildFinalSplitting(new HashSet<>(records), phiRelation, context);
         // Задать автомат по данному разбиению
-        return defineMinimizedMachine(records, finalSplitting);
+        return defineMinimizedMachine(finalSplitting);
     }
 
     private Set<Set<Record>> buildInitialSplitting(List<Record> records) {
@@ -85,16 +87,100 @@ public final class MealyMachineMinimizer {
         return modified;
     }
 
-    private boolean isClosureViolated(int i, int j, boolean[][] phiRelation, Map<Integer, Record> context) {
-        return false;
+    private boolean isClosureViolated(int state1, int state2, boolean[][] phiRelation, Map<Integer, Record> context) {
+        Record record1 = context.get(state1);
+        Record record2 = context.get(state2);
+        boolean closureViolated = false;
+        Set<String> alphas = record1.getAlphas();
+        for (String alpha : alphas) {
+            int nextState1 = record1.getTransition(alpha).getNextState();
+            int nextState2 = record2.getTransition(alpha).getNextState();
+            if (!phiRelation[nextState1][nextState2]) {
+                closureViolated = true;
+                break;
+            }
+        }
+        return closureViolated;
     }
 
-    private Set<Set<Record>> buildFinalSplitting(List<Record> records, boolean[][] phiRelation) {
+    private Set<Set<Record>> buildFinalSplitting(Set<Record> records, boolean[][] phiRelation,
+                                                 Map<Integer, Record> context) {
+        Set<Set<Record>> finalSplitting = new HashSet<>();
+        while (!records.isEmpty()) {
+            Iterator<Record> iterator = records.iterator();
+            Record record = iterator.next();
+
+            Set<Record> set = new HashSet<>();
+            set.add(record);
+            set = populateNewState(set, phiRelation, context);
+
+            records.removeAll(set);
+            finalSplitting.add(set);
+        }
+        return finalSplitting;
+    }
+
+    private Set<Record> populateNewState(Set<Record> records, boolean[][] phiRelation, Map<Integer, Record> context) {
+        Set<Record> result = new HashSet<>();
+        while (!records.isEmpty()) {
+            Iterator<Record> iterator = records.iterator();
+            Record record = iterator.next();
+            iterator.remove();
+            result.add(record);
+            int state = record.getState();
+            for (int i = 0; i < phiRelation.length; i++) {
+                record = context.get(i);
+                if (phiRelation[state][i] && !result.contains(record)) {
+                    records.add(record);
+                }
+            }
+        }
+        return result;
+    }
+
+    private List<Record> defineMinimizedMachine(Set<Set<Record>> finalSplitting) {
+        List<Record> result = new ArrayList<>();
+
+        Map<Integer, Set<Record>> newStates = new HashMap<>();
+        int state = 0;
+        for (Set<Record> recordSet : finalSplitting) {
+            newStates.put(state++, recordSet);
+        }
+
+        for (Map.Entry<Integer, Set<Record>> entry : newStates.entrySet()) {
+            state = entry.getKey();
+            Set<Record> recordSet = entry.getValue();
+            Record record = recordSet.iterator().next();
+            Set<String> alphas = record.getAlphas();
+
+            Map<String, Transition> transitions = new HashMap<>();
+            for (String alpha : alphas) {
+                transitions.put(alpha, getTransition(alpha, record, newStates));
+            }
+
+            Map<String, Output> outputs = new HashMap<>();
+            for (String alpha : alphas) {
+                outputs.put(alpha, new Output(record.getOutput(alpha).getValue()));
+            }
+
+            result.add(new Record(state, transitions, outputs));
+        }
+
+        return result;
+    }
+
+    private Transition getTransition(String alpha, Record record, Map<Integer, Set<Record>> newStates) {
+        int nextState = record.getTransition(alpha).getNextState();
+        for (Map.Entry<Integer, Set<Record>> entry : newStates.entrySet()) {
+            for (Record candidate : entry.getValue()) {
+                if (candidate.getState() == nextState) {
+                    Transition transition = new Transition();
+                    transition.setNextState(entry.getKey());
+                    return transition;
+                }
+            }
+        }
         return null;
-    }
-
-    private List<Record> defineMinimizedMachine(List<Record> records, Set<Set<Record>> finalSplitting) {
-        return records; // TODO: implement
     }
 
     private static final class OutputKey {

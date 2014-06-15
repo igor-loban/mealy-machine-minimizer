@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class Record implements Serializable {
     private final int state;
@@ -15,6 +16,10 @@ public class Record implements Serializable {
         this.state = state;
         this.transitions = new HashMap<>(transitions);
         this.outputs = new HashMap<>(outputs);
+    }
+
+    public Set<String> getAlphas() {
+        return transitions.keySet();
     }
 
     public int getState() {

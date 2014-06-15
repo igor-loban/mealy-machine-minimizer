@@ -10,6 +10,15 @@
     </h:head>
 
     <h:body>
+        <p:outputPanel style="text-align: center; padding-bottom: 32px;">
+            <h:outputText value="Me" style="font-weight: bold; font-size: 32px; font-family: sans-serif;"/>
+            <h:outputText value="aly " style="font-size: 32px; font-family: sans-serif;"/>
+            <h:outputText value="Ma" style="font-weight: bold; font-size: 32px; font-family: sans-serif;"/>
+            <h:outputText value="chine " style="font-size: 32px; font-family: sans-serif;"/>
+            <h:outputText value="Mi" style="font-weight: bold; font-size: 32px; font-family: sans-serif;"/>
+            <h:outputText value="nimizer" style="font-size: 32px; font-family: sans-serif;"/>
+        </p:outputPanel>
+
         <h:form>
             <p:wizard flowListener="#{wizardBean.handleFlowEvent}">
                 <p:tab id="define1" title="Define 1">
@@ -34,70 +43,74 @@
                 </p:tab>
 
                 <p:tab id="define2" title="Define 2">
-                    <p:panel header="Define 2 Details">
-                        <p:dataTable var="record" value="#{wizardBean.records}" editable="true">
-                            <p:column headerText="State">
-                                <h:outputText value="#{record.state}"/>
-                            </p:column>
+                    <p:dataTable var="record" value="#{wizardBean.records}" editable="true">
+                        <f:facet name="header">
+                            <h:outputText value="Define Mealy Machine"/>
+                        </f:facet>
 
-                            <p:columns var="alpha" value="#{wizardBean.inputAlphabet}">
-                                <f:facet name="header">
-                                    <h:outputText value="#{alpha}"/>
+                        <p:column headerText="State">
+                            <h:outputText value="#{record.state}"/>
+                        </p:column>
+
+                        <p:columns var="alpha" value="#{wizardBean.inputAlphabet}">
+                            <f:facet name="header">
+                                <h:outputText value="#{alpha}"/>
+                            </f:facet>
+                            <p:cellEditor>
+                                <f:facet name="input">
+                                    <p:inputText value="#{record.getTransition(alpha).nextState}"
+                                                 style="width: 32px;"/>
                                 </f:facet>
-                                <p:cellEditor>
-                                    <f:facet name="input">
-                                        <p:inputText value="#{record.getTransition(alpha).nextState}"
-                                                     style="width: 32px;"/>
-                                    </f:facet>
-                                    <f:facet name="output">
-                                        <h:outputText value="#{record.getTransition(alpha).nextState}"/>
-                                    </f:facet>
-                                </p:cellEditor>
-                            </p:columns>
-
-                            <p:columns var="alpha" value="#{wizardBean.inputAlphabet}">
-                                <f:facet name="header">
-                                    <h:outputText value="#{alpha}"/>
+                                <f:facet name="output">
+                                    <h:outputText value="#{record.getTransition(alpha).nextState}"/>
                                 </f:facet>
-                                <p:cellEditor>
-                                    <f:facet name="input">
-                                        <p:inputText value="#{record.getOutput(alpha).value}" style="width: 32px;"/>
-                                    </f:facet>
-                                    <f:facet name="output">
-                                        <h:outputText value="#{record.getOutput(alpha).value}"/>
-                                    </f:facet>
-                                </p:cellEditor>
-                            </p:columns>
+                            </p:cellEditor>
+                        </p:columns>
 
-                            <p:column style="width: 32px;">
-                                <p:rowEditor/>
-                            </p:column>
-                        </p:dataTable>
-                    </p:panel>
+                        <p:columns var="alpha" value="#{wizardBean.inputAlphabet}">
+                            <f:facet name="header">
+                                <h:outputText value="#{alpha}"/>
+                            </f:facet>
+                            <p:cellEditor>
+                                <f:facet name="input">
+                                    <p:inputText value="#{record.getOutput(alpha).value}" style="width: 32px;"/>
+                                </f:facet>
+                                <f:facet name="output">
+                                    <h:outputText value="#{record.getOutput(alpha).value}"/>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:columns>
+
+                        <p:column style="width: 32px;">
+                            <p:rowEditor/>
+                        </p:column>
+                    </p:dataTable>
                 </p:tab>
 
                 <p:tab id="result" title="Result">
-                    <p:panel header="Equivalential Minimized Mealy Machine">
-                        <p:dataTable var="record" value="#{wizardBean.records}">
-                            <p:column headerText="State">
-                                <h:outputText value="#{record.state}"/>
-                            </p:column>
+                    <p:dataTable var="record" value="#{wizardBean.resultRecords}">
+                        <f:facet name="header">
+                            <h:outputText value="Equivalential Minimized Mealy Machine"/>
+                        </f:facet>
 
-                            <p:columns var="alpha" value="#{wizardBean.inputAlphabet}">
-                                <f:facet name="header">
-                                    <h:outputText value="#{alpha}"/>
-                                </f:facet>
-                                <h:outputText value="#{record.getTransition(alpha).nextState}"/>
-                            </p:columns>
+                        <p:column headerText="State">
+                            <h:outputText value="#{record.state}"/>
+                        </p:column>
 
-                            <p:columns var="alpha" value="#{wizardBean.inputAlphabet}">
-                                <f:facet name="header">
-                                    <h:outputText value="#{alpha}"/>
-                                </f:facet>
-                                <h:outputText value="#{record.getOutput(alpha).value}"/>
-                            </p:columns>
-                        </p:dataTable>
-                    </p:panel>
+                        <p:columns var="alpha" value="#{wizardBean.inputAlphabet}">
+                            <f:facet name="header">
+                                <h:outputText value="#{alpha}"/>
+                            </f:facet>
+                            <h:outputText value="#{record.getTransition(alpha).nextState}"/>
+                        </p:columns>
+
+                        <p:columns var="alpha" value="#{wizardBean.inputAlphabet}">
+                            <f:facet name="header">
+                                <h:outputText value="#{alpha}"/>
+                            </f:facet>
+                            <h:outputText value="#{record.getOutput(alpha).value}"/>
+                        </p:columns>
+                    </p:dataTable>
                 </p:tab>
             </p:wizard>
         </h:form>

@@ -56,41 +56,12 @@ public class WizardBean implements Serializable {
         return inputAlphabet;
     }
 
-    public List<String> getOutputAlphabet() {
-        return outputAlphabet;
-    }
-
     public List<Record> getRecords() {
         return records;
     }
 
-    public String getText() {
-        return "Hello, world!";
-    }
-
-    public List<String> getStateDescriptors() {
-        List<String> stateDescriptors = new ArrayList<>();
-        stateDescriptors.add("1");
-        stateDescriptors.add("1");
-        stateDescriptors.add("1");
-        stateDescriptors.add("1");
-        stateDescriptors.add("1");
-        return stateDescriptors;
-    }
-
-    public List<String> getColumns() {
-        List<String> columns = new ArrayList<>();
-        columns.add("A");
-        columns.add("B");
-        columns.add("C");
-        columns.add("D");
-        columns.add("E");
-        columns.add("A");
-        columns.add("B");
-        columns.add("C");
-        columns.add("D");
-        columns.add("E");
-        return columns;
+    public List<Record> getResultRecords() {
+        return resultRecords;
     }
 
     public String handleFlowEvent(FlowEvent event) {
