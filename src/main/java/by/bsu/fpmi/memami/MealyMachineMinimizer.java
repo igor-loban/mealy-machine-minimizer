@@ -1,5 +1,6 @@
 package by.bsu.fpmi.memami;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -183,15 +184,11 @@ public final class MealyMachineMinimizer {
         return null;
     }
 
-    private static final class OutputKey {
+    private static final class OutputKey implements Serializable {
         private final List<String> outputs;
 
         public OutputKey(List<String> outputs) {
             this.outputs = Collections.unmodifiableList(outputs);
-        }
-
-        public List<String> getOutputs() {
-            return outputs;
         }
 
         @Override
@@ -202,14 +199,8 @@ public final class MealyMachineMinimizer {
             if (o == null || getClass() != o.getClass()) {
                 return false;
             }
-
             OutputKey outputKey = (OutputKey) o;
-
-            if (outputs != null ? !outputs.equals(outputKey.outputs) : outputKey.outputs != null) {
-                return false;
-            }
-
-            return true;
+            return !(outputs != null ? !outputs.equals(outputKey.outputs) : outputKey.outputs != null);
         }
 
         @Override
